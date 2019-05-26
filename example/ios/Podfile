@@ -1,7 +1,14 @@
-platform :ios, '10.0'
+# Uncomment this line to define a global platform for your project
+platform :ios, '11.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
 
 def parse_KV_file(file, separator='=')
   file_abs_path = File.expand_path(file)
@@ -26,34 +33,35 @@ def parse_KV_file(file, separator='=')
 end
 
 target 'Runner' do
-  pod 'SalesforceAnalytics', :path => '../../mobile_sdk/SalesforceMobileSDK-iOS'
-  pod 'SalesforceSDKCore', :path => '../../mobile_sdk/SalesforceMobileSDK-iOS'
-  pod 'SmartStore', :path => '../../mobile_sdk/SalesforceMobileSDK-iOS'
-  pod 'SmartSync', :path => '../../mobile_sdk/SalesforceMobileSDK-iOS'
+  use_frameworks!
+  pod 'SalesforceAnalytics', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+  pod 'SalesforceSDKCore', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+  pod 'SmartStore', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+  pod 'SmartSync', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+  pod 'SalesforceSDKCommon', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
 
   # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
   # referring to absolute paths on developers' machines.
-  system('rm -rf Pods/.symlinks')
-  system('mkdir -p Pods/.symlinks/flutter')
-  system('mkdir -p Pods/.symlinks/plugins')
+  system('rm -rf .symlinks')
+  system('mkdir -p .symlinks/plugins')
 
   # Flutter Pods
   generated_xcode_build_settings = parse_KV_file('./Flutter/Generated.xcconfig')
   if generated_xcode_build_settings.empty?
-    puts "Generated.xcconfig must exist. If you're running pod install manually, make sure flutter packages get is executed first."
+    puts "Generated.xcconfig must exist. If you're running pod install manually, make sure flutter pub get is executed first."
   end
   generated_xcode_build_settings.map { |p|
     if p[:name] == 'FLUTTER_FRAMEWORK_DIR'
-      symlink = File.join('Pods', '.symlinks', 'flutter', File.basename(p[:path]))
-      File.symlink(p[:path], symlink)
-      pod 'Flutter', :path => symlink
+      symlink = File.join('.symlinks', 'flutter')
+      File.symlink(File.dirname(p[:path]), symlink)
+      pod 'Flutter', :path => File.join(symlink, File.basename(p[:path]))
     end
   }
 
   # Plugin Pods
   plugin_pods = parse_KV_file('../.flutter-plugins')
   plugin_pods.map { |p|
-    symlink = File.join('Pods', '.symlinks', 'plugins', File.basename(p[:path]))
+    symlink = File.join('.symlinks', 'plugins', p[:name])
     File.symlink(p[:path], symlink)
     pod p[:name], :path => File.join(symlink, 'ios')
   }
@@ -63,10 +71,85 @@ post_install do |installer|
   # Fix for xcode9/fmdb/sqlcipher/cocoapod issue - see https://discuss.zetetic.net/t/ios-11-xcode-issue-implicit-declaration-of-function-sqlite3-key-is-invalid-in-c99/2198/27
   print "SQLCipher: link Pods/Headers/sqlite3.h"
   system "mkdir -p Pods/Headers/Private && ln -s ../../SQLCipher/sqlite3.h Pods/Headers/Private"
-
+  
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
     end
   end
 end
+
+
+# platform :ios, '11.0'
+
+# # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+# ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# def parse_KV_file(file, separator='=')
+#   file_abs_path = File.expand_path(file)
+#   if !File.exists? file_abs_path
+#     return [];
+#   end
+#   pods_ary = []
+#   skip_line_start_symbols = ["#", "/"]
+#   File.foreach(file_abs_path) { |line|
+#       next if skip_line_start_symbols.any? { |symbol| line =~ /^\s*#{symbol}/ }
+#       plugin = line.split(pattern=separator)
+#       if plugin.length == 2
+#         podname = plugin[0].strip()
+#         path = plugin[1].strip()
+#         podpath = File.expand_path("#{path}", file_abs_path)
+#         pods_ary.push({:name => podname, :path => podpath});
+#       else
+#         puts "Invalid plugin specification: #{line}"
+#       end
+#   }
+#   return pods_ary
+# end
+
+# target 'Runner' do
+#   pod 'SalesforceAnalytics', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+#   pod 'SalesforceSDKCore', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+#   pod 'SmartStore', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+#   pod 'SmartSync', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+#   pod 'SalesforceSDKCommon', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+
+#   # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
+#   # referring to absolute paths on developers' machines.
+#   system('rm -rf Pods/.symlinks')
+#   system('mkdir -p Pods/.symlinks/flutter')
+#   system('mkdir -p Pods/.symlinks/plugins')
+
+#   # Flutter Pods
+#   generated_xcode_build_settings = parse_KV_file('./Flutter/Generated.xcconfig')
+#   if generated_xcode_build_settings.empty?
+#     puts "Generated.xcconfig must exist. If you're running pod install manually, make sure flutter packages get is executed first."
+#   end
+#   generated_xcode_build_settings.map { |p|
+#     if p[:name] == 'FLUTTER_FRAMEWORK_DIR'
+#       symlink = File.join('Pods', '.symlinks', 'flutter', File.basename(p[:path]))
+#       File.symlink(p[:path], symlink)
+#       pod 'Flutter', :path => symlink
+#     end
+#   }
+
+#   # Plugin Pods
+#   plugin_pods = parse_KV_file('../.flutter-plugins')
+#   plugin_pods.map { |p|
+#     symlink = File.join('Pods', '.symlinks', 'plugins', File.basename(p[:path]))
+#     File.symlink(p[:path], symlink)
+#     pod p[:name], :path => File.join(symlink, 'ios')
+#   }
+# end
+
+# post_install do |installer|
+#   # Fix for xcode9/fmdb/sqlcipher/cocoapod issue - see https://discuss.zetetic.net/t/ios-11-xcode-issue-implicit-declaration-of-function-sqlite3-key-is-invalid-in-c99/2198/27
+#   print "SQLCipher: link Pods/Headers/sqlite3.h"
+#   system "mkdir -p Pods/Headers/Private && ln -s ../../SQLCipher/sqlite3.h Pods/Headers/Private"
+
+#   installer.pods_project.targets.each do |target|
+#     target.build_configurations.each do |config|
+#       config.build_settings['ENABLE_BITCODE'] = 'NO'
+#     end
+#   end
+# end
