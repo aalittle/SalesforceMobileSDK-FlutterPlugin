@@ -96,15 +96,15 @@ static NSString * const OAuthRedirectURI        = @"testsfdc:///mobilesdk/detect
     [self initializeAppViewState];
 
     //Uncomment the code below to see how you can customize the color, textcolor, font and   fontsize of the navigation bar
-    //SFSDKLoginViewControllerConfig *loginViewConfig = [[SFSDKLoginViewControllerConfig  alloc] init];
+    SFSDKLoginViewControllerConfig *loginViewConfig = [[SFSDKLoginViewControllerConfig  alloc] init];
     //Set showSettingsIcon to NO if you want to hide the settings icon on the nav bar
-    //loginViewConfig.showSettingsIcon = YES;
+    loginViewConfig.showSettingsIcon = YES;
     //Set showNavBar to NO if you want to hide the top bar
-    //loginViewConfig.showNavbar = YES;
-    //loginViewConfig.navBarColor = [UIColor colorWithRed:0.051 green:0.765 blue:0.733 alpha:1.0];
-    //loginViewConfig.navBarTextColor = [UIColor whiteColor];
-    //loginViewConfig.navBarFont = [UIFont fontWithName:@"Helvetica" size:16.0];
-    //[SFUserAccountManager sharedInstance].loginViewControllerConfig = loginViewConfig;
+    loginViewConfig.showNavbar = YES;
+    loginViewConfig.navBarColor = [UIColor colorWithRed:0.051 green:0.765 blue:0.733 alpha:1.0];
+  loginViewConfig.navBarTintColor = [UIColor whiteColor];
+    loginViewConfig.navBarFont = [UIFont fontWithName:@"Helvetica" size:16.0];
+    [SFUserAccountManager sharedInstance].loginViewControllerConfig = loginViewConfig;
 
     [[SalesforceSDKManager sharedManager] launch];
 

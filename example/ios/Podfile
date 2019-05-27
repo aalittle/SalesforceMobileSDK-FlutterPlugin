@@ -34,11 +34,11 @@ end
 
 target 'Runner' do
   use_frameworks!
-  pod 'SalesforceAnalytics', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
-  pod 'SalesforceSDKCore', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
-  pod 'SmartStore', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
-  pod 'SmartSync', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
-  pod 'SalesforceSDKCommon', :path => '~alittle/Development/SalesforceMobileSDK-iOS'
+  pod 'SalesforceAnalytics', :path => '../../SalesforceMobileSDK-iOS'
+  pod 'SalesforceSDKCore', :path => '../../SalesforceMobileSDK-iOS'
+  pod 'SmartStore', :path => '../../SalesforceMobileSDK-iOS'
+  pod 'SmartSync', :path => '../../SalesforceMobileSDK-iOS'
+  pod 'SalesforceSDKCommon', :path => '../../SalesforceMobileSDK-iOS'
 
   # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
   # referring to absolute paths on developers' machines.

@@ -49,10 +49,10 @@ class ContactsPageState extends State<ContactsPage> {
   }
 
   void fetchData() async {
-    Map response = await SalesforcePlugin.query("SELECT Id, Name, Email FROM User LIMIT 50");
+    Map response = await SalesforcePlugin.query("SELECT Id, Name, Email FROM Contact LIMIT 50");
     List<Contact> contacts = List<Contact>();
     response["records"].forEach((contact) {
-      contacts.add(new Contact(name: contact["Name"], email: contact["Email"]));
+      contacts.add(new Contact(name: contact["Name"], email: contact["Email"] != null ? contact["Email"] : "No email"));
     }); 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling

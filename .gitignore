@@ -3,3 +3,7 @@
 Podfile.lock
 mobile_sdk/
 package-lock.json
+/SalesforceMobileSDK-iOS
+/SalesforceMobileSDK-Android
+/example/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+/.vscode
